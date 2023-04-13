@@ -54,7 +54,7 @@ return <div>
                 <div className="min-w-[50px] bg-green-100 justify-center text-center text-4xl pt-4 justify-self-start" >{overlay.name.split("")[0].toUpperCase()}</div>
 
                 <div className="flex-grow pl-4 xs:max-w-[60%] sm:max-w-[400px] overflow-hidden">
-                    <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white overflow-hidden">{overlay.name}</h5>
+                    <h5 className="mb-2 text-1xl font-bold tracking-tight text-gray-900 dark:text-white overflow-hidden">{overlay.name}</h5>
                     <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 overflow-hidden">{overlay.url}</p>
                 </div>
 

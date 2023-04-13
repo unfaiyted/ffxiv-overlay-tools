@@ -119,7 +119,7 @@ export const createOverlayWindow = (config: OverlayConfig) : void => {
 
 
   // TODO: also figure out the ACT Overlay plugin events to set this in the page.
-  if(config.clickThrough) browser.setIgnoreMouseEvents(true);
+  if(config.locked) browser.setIgnoreMouseEvents(true);
 
 
 
@@ -127,6 +127,10 @@ export const createOverlayWindow = (config: OverlayConfig) : void => {
   browser.loadURL(config.url).then((res) => {
      browser.webContents.executeJavaScript(`
         window.myOverlayGuid = '${config.guid}';
+
+      const unlockEvent = new CustomEvent("onOverlayStateUpdate", { detail: { isLocked: ${config.locked} } });
+      window.document.dispatchEvent(unlockEvent)
+
     `);
 
   })

@@ -39,6 +39,9 @@ export const OverlayAdder = ({ addOverlays} : {addOverlays: any}) => {
 
 
     return <div>
+
+
+        <h3 className="text-2xl dark:text-white">Add Overlays</h3>
         <div className="mb-2 block">
             <Label
                 htmlFor="name"

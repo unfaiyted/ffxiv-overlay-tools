@@ -26,11 +26,12 @@ npm install
 npm start  # begins development server/client
 ```
 
-I've only tested it in Ubuntu 22.04, but is a standard Electron built app so it should build on most systems.
+I've only tested it in Ubuntu 22.04, but is a standard Electron-built app, so it should build on most systems.
 
 
 
 ## TODO:
-- Automate github actions to build it?
-- 
-
+- Automate GitHub actions to build it?
+- implement the handlers used by the other overlay tools
+  - Right now, I'm not able to do certain things like editing the settings in an overlay.
+   - https://overlayplugin.github.io/OverlayPlugin/devs/
