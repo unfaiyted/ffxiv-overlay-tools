@@ -3,6 +3,7 @@ import OverlayAdder from "./overlay-adder";
 import OverlayList from "./overlay-list";
 import {OverlayConfig} from "../models/OverlayConfig";
 import Details from "./save-positions";
+import {DarkThemeToggle, Flowbite} from "flowbite-react";
 
 export const Main = () => {
 
@@ -72,6 +73,8 @@ export const Main = () => {
             {overlays ? <OverlayList overlays={overlays} updateOverlays={updateOverlay}/> : <p>Loading Overlays</p>}
             <Details updateAllOverlays={updateAllOverlays}/>
         <OverlayAdder addOverlays={addOverlays} />
+
+
         </div>
 )
 

@@ -21,7 +21,9 @@ export const createMainWindow = (): void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: true,
-      nodeIntegrationInWorker: true // <-
+      nodeIntegrationInWorker: true,
+      zoomFactor: 1, // set the zoom factor to 100%
+
     },
   });
 
@@ -109,6 +111,7 @@ export const createOverlayWindow = (config: OverlayConfig) : void => {
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       nodeIntegration: true,
+      zoomFactor: 1, // set the zoom factor to 100%
     },
   });
 
@@ -117,6 +120,7 @@ export const createOverlayWindow = (config: OverlayConfig) : void => {
 
   // TODO: also figure out the ACT Overlay plugin events to set this in the page.
   if(config.clickThrough) browser.setIgnoreMouseEvents(true);
+
 
 
   //TODO: error handing for failed to load url... in front end
