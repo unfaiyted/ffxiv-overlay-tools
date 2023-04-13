@@ -1,26 +1,18 @@
-import {OverlayConfig} from "../app";
-
-const createWindow = (config: OverlayConfig) =>  api.openWindow(config);
-
-const OverlayListItem = (overlay: OverlayConfig) => {
-    console.log("Creating overlay from configuration");
-    console.log(overlay.url);
-
-    createWindow(overlay);
-
-    return <div>
-        <span>{overlay.name}</span>
-        <span>[{overlay.url}]</span>
-        <span>[Edit]</span>
-    </div>
-}
+import {OverlayConfig} from "../models/OverlayConfig";
+import React, {useState, useEffect} from "react";
+import OverlayListItem from "./overlay-list-item";
 
 
+export const OverlayList = ({overlays, updateOverlays} : { overlays: OverlayConfig[], updateOverlays: any}) => {
 
-export const OverlayList = ({overlays} : { overlays: OverlayConfig[]}) => {
-    return <div>
-        {overlays.map((overlay: OverlayConfig) => OverlayListItem(overlay))}
-    </div>
+    return (
+        <div>
+            {overlays.map((overlay: OverlayConfig) => (
+                <OverlayListItem key={overlay.guid} config={overlay} updateOverlays={updateOverlays} />
+            ))}
+        </div>
+    );
+
 }
 
 export default OverlayList;

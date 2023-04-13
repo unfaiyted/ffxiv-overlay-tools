@@ -1,7 +1,7 @@
-import {OverlayConfig} from "../app";
-import {BrowserWindow} from "electron";
+import {OverlayConfig} from "./OverlayConfig";
+import {BrowserDetail} from "./BrowserDetail";
 
-interface Window {
+export interface OverlayWindow {
     config: OverlayConfig
-    browser: BrowserWindow;
+    browser: BrowserDetail;
 }
