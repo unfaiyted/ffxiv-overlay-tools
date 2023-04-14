@@ -26,7 +26,7 @@ export default {
         ipcRenderer.send('close-all-windows')
     },
     cleanupWindows: () => ipcRenderer.send('cleanup-windows'),
-
+    closeWindow: (guid: string) => ipcRenderer.sendSync('close-window', guid),
     // Listeners
     listenForWindowDetails: (listenerFn: any) => {
         console.log('Registered listening for window-details')

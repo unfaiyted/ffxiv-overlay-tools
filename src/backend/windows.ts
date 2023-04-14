@@ -55,7 +55,7 @@ export const createOverlayWindow = (config: OverlayConfig): void => {
     if (exists) {
         // Remove and recreate
 
-        console.log('Found window with same overlay GUID!')
+        console.log('Found window with same overlay GUID!', config.guid)
 
         const existingWindows = windows.filter(
             (window: OverlayWindow) => window.config.guid === config.guid
@@ -63,13 +63,6 @@ export const createOverlayWindow = (config: OverlayConfig): void => {
 
         existingWindows.forEach((window: OverlayWindow) => {
             BrowserWindow.getAllWindows().forEach(function (win) {
-                //TODO: Stay window culling, have it look for any windows that it doesent know what they are and just close them
-
-                /*  console.log(
-                    'Found existing',
-                    win.webContents.getProcessId(),
-                    window.browser.processId
-                )*/
                 if (
                     win.webContents.getProcessId() == window.browser.processId
                 ) {
@@ -184,18 +177,51 @@ ipcMain.on('close-all-windows', async () => {
 })
 
 ipcMain.on('get-window-details', async (event, guid) => {
+    event.returnValue = await getWindowDetailsByGuid(guid)
+})
+
+ipcMain.on('close-window', async (event, guid) => {
+    console.log('close-window-ipcmain-guid', guid)
+    await closeWindowByGuid(guid)
+    event.returnValue = true
+})
+
+const getWindowByGuid = async (guid: string) => {
     const windows = BrowserWindow.getAllWindows()
 
     for (const win of windows) {
         const winGuid = await findGuid(win)
 
+        console.log('winGuid=', winGuid, 'guid=', guid)
+
         if (winGuid === guid) {
             // event.sender.send('window-details', await getWinDetails(win, guid))
-            event.returnValue = await getWinDetails(win, guid)
+            return win
         }
         // Close without a guid that can be used
     }
-})
+
+    // not found
+    return null
+}
+
+const getWindowDetailsByGuid = async (guid: string) => {
+    const win = await getWindowByGuid(guid)
+
+    if (win) {
+        console.log('Found window with guid' + guid)
+        return await getWinDetails(win, guid)
+    }
+}
+
+export const closeWindowByGuid = async (guid: string) => {
+    console.log('closing window' + guid)
+    const win: BrowserWindow = await getWindowByGuid(guid)
+    if (win) {
+        console.log('found window match, closing window')
+        win.close()
+    }
+}
 
 export const getWinDetails = async (
     win: BrowserWindow,
@@ -219,10 +245,7 @@ export const getWinDetails = async (
 
 export const findGuid = async (win: Electron.BrowserWindow, timeout = 250) => {
     const timeoutPromise = new Promise((resolve, reject) => {
-        setTimeout(
-            () => reject(new Error(`Timeout after ${timeout} ms`)),
-            timeout
-        )
+        setTimeout(() => resolve(null), timeout)
     })
 
     const guidPromise = win.webContents.executeJavaScript(`

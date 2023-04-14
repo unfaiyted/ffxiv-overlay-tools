@@ -16,9 +16,9 @@ export const OverlayListItem = ({
     const [overlay, editOverlay] = useState(config)
     const [initialRender, setInitialRender] = useState(true)
 
-    const deleteOverlay = () => {
+    const deleteOverlay = async () => {
         console.log('Deleting overlay')
-        api.deleteOverlay(overlay.guid)
+        await api.deleteOverlay(overlay.guid)
         editOverlay((overlay: OverlayConfig) => ({
             ...overlay,
             name: 'DELETE',
@@ -43,8 +43,8 @@ export const OverlayListItem = ({
 
     useEffect(() => {
         console.log('overlay values changed')
-        if (!initialRender) {
-            console.log('Get windows Details by Guid: ' + config.guid)
+        if (!initialRender && overlay.name !== 'DELETE') {
+            console.log('Get windows Details by Guid: ' + overlay.guid)
             api.getWindowDetailsByGuid(overlay.guid).then((details) => {
                 console.log('got details for', details)
                 const mergedOverlay = mergeBrowserDetailsWithOverlay(
@@ -55,6 +55,8 @@ export const OverlayListItem = ({
                 api.editOverlay(mergedOverlay)
                 updateOverlay(mergedOverlay)
             })
+        } else if (overlay.name === 'DELETE') {
+            updateOverlay(overlay)
         }
 
         setInitialRender(false)
@@ -62,6 +64,9 @@ export const OverlayListItem = ({
 
     const toggleEditOverlay = async () => {
         //TODO: fix this implementation
+
+        console.log('Toggling toggle edit overlay', overlay)
+
         editOverlay((overlay) => ({ ...overlay, locked: !overlay.locked }))
     }
 

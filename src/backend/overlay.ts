@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron'
 import { OverlayConfig } from '../models/OverlayConfig'
-import { createOverlayWindow } from './windows'
+import { closeWindowByGuid, createOverlayWindow } from './windows'
 import * as fs from 'fs'
 
 import { appConfig, windowDetails } from './index'
@@ -26,6 +26,7 @@ ipcMain.handle('create-overlay', (event, config: OverlayConfig) => {
 ipcMain.handle('edit-overlay', (event, config: OverlayConfig) => {
     console.log('edit-overlay', config)
 
+    closeWindowByGuid(config.guid)
     createOverlayWindow(config)
 
     const matchingItem = appConfig.overlays.findIndex(
@@ -67,15 +68,16 @@ ipcMain.on('save-overlay-positions', (event) => {
 
     return appConfig
 })
-ipcMain.handle('delete-overlay', (event, guid: string) => {
+ipcMain.handle('delete-overlay', async (event, guid: string) => {
     const matchingItem = appConfig.overlays.findIndex(
         (overlay) => overlay.guid === guid
     )
 
+    await closeWindowByGuid(guid)
+
     console.log('delete-overlay', matchingItem)
 
     // close overlay window
-
     appConfig.overlays.splice(matchingItem, 1)
 
     fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig))
