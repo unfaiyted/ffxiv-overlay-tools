@@ -1,23 +1,32 @@
 # FFXIV Electron Based Overlay Manager
 
-The other solutions werent working for me very well on linux so I put this together really fast using 
+The other solutions weren't working for me very well on Linux,
+so I put this together really fast using 
 [Electron Forge](https://github.com/electron/forge)
 
-This is really early development.
+*This is early development.*
 
-![img.png](img.png)
+![img_1.png](img_1.png)
 
-# Build
+# Download Releases
+
+You can download the lastest release Github [here](https://github.com/unfaiyted/ffxiv-overlay-tools/releases)
+
+
+# Build It Yourself
 
 ```bash
-npm package
+npm run make 
 ```
+You made need to install additional make tools. Depending on your system setup.
 
-It'll output somewhere like this `./out/ffxiv-overlay-tools-linux-x64/`
+It'll output somewhere like this `./out/make/`
 
 ```bash
-./ffxiv-overlay-tools
+apt install ./out/make/deb/x64/ffxiv-overlay-tools_1.0.1_am64.deb
 ```
+*Path may differ depending on version built and os configuration*
+
 
 
 # Development Setup
@@ -27,7 +36,6 @@ npm start  # begins development server/client
 ```
 
 I've only tested it in Ubuntu 22.04, but is a standard Electron-built app, so it should build on most systems.
-
 
 
 ## TODO:
