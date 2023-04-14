@@ -1,28 +1,31 @@
-import React, {useEffect} from 'react';
-import {Button} from "flowbite-react";
+import React, { useEffect } from 'react'
+import { Button } from 'flowbite-react'
 
-export const WindowDetails = ({updateAllOverlays }: { updateAllOverlays: any}) => {
+export const WindowDetails = ({
+    updateAllOverlays,
+}: {
+    updateAllOverlays: any
+}) => {
+    const getDetails = async () => {
+        console.log('Getting details...')
 
-    const getDetails =  async () => {
-        console.log("Getting details...");
+        api.updateWindowDetails()
 
-
-        api.updateWindowDetails();
-
-      setTimeout(() => {
-        updateAllOverlays();
-      },2000)
-
+        setTimeout(() => {
+            updateAllOverlays()
+        }, 2000)
     }
 
-    const handleCleanup  = async () => {
-        api.cleanupWindows();
+    const handleCleanup = async () => {
+        api.cleanupWindows()
     }
 
-    return <div>
-        <Button onClick={getDetails}>Save Overlay Positions</Button>
-        <Button onClick={handleCleanup}>Window Cleanup</Button>
-    </div>
+    return (
+        <div className="flex flex-row justify-between">
+            <Button onClick={getDetails}>Save Overlay Positions</Button>
+            <Button onClick={handleCleanup}>Window Cleanup</Button>
+        </div>
+    )
 }
 
-export default WindowDetails;
+export default WindowDetails

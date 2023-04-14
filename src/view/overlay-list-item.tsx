@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { OverlayConfig } from '../models/OverlayConfig'
-import { Button, Card, Dropdown, ToggleSwitch } from 'flowbite-react'
+import { Avatar, Button, Card, Dropdown, ToggleSwitch } from 'flowbite-react'
 import { mergeBrowserDetailsWithOverlay } from '../utils/utils'
 import { BrowserDetail } from '../models/BrowserDetail'
 
@@ -74,8 +74,14 @@ export const OverlayListItem = ({
         <div>
             <Card horizontal={true} className="mb-3">
                 <div className="flex flew-row justify-between ">
-                    <div className="min-w-[50px] bg-green-100 justify-center text-center text-4xl pt-4 justify-self-start">
-                        {overlay.name.split('')[0].toUpperCase()}
+                    <div className="min-w-[75px] mr-2 justify-center text-center text-4xl justify-self-start">
+                        {/*{overlay.name.split('')[0].toUpperCase()}*/}
+                        <Avatar
+                            placeholderInitials={overlay.name
+                                .split('')[0]
+                                .toUpperCase()}
+                            size="lg"
+                        />
                     </div>
 
                     <div className="flex-grow pl-4 xs:max-w-[60%] sm:max-w-[400px] overflow-hidden">
@@ -97,7 +103,7 @@ export const OverlayListItem = ({
                                 />
                             </Dropdown.Item>
 
-                            <Dropdown.Item className="flex-initial">
+                            <Dropdown.Item className="flex-initial justify-self-end">
                                 <Button
                                     size="sm"
                                     gradientMonochrome="failure"

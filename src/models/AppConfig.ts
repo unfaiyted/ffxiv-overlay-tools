@@ -1,15 +1,15 @@
-import {OverlayConfig} from "./OverlayConfig";
+import { OverlayConfig } from './OverlayConfig'
 
 export interface AppConfig {
-    locked: boolean;
-    version: number;
-    overlays: OverlayConfig[];
+    locked: boolean
+    version: number
+    theme: string
+    overlays: OverlayConfig[]
 }
-
 
 export const defaultAppConfig: AppConfig = {
     version: 0,
+    theme: 'dark',
     overlays: [],
-    locked: false
-};
-
+    locked: false,
+}

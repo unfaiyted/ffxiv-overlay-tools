@@ -1,7 +1,7 @@
 {
   "name": "ffxiv-overlay-tools",
   "productName": "ffxiv-overlay-tools",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My Electron overlay manager application",
   "main": ".webpack/main",
   "scripts": {

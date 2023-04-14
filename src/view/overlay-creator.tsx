@@ -34,7 +34,7 @@ export const OverlayAdder = ({ addOverlays }: { addOverlays: any }) => {
     }
 
     return (
-        <div>
+        <div className="mt-3 mb-3">
             <h3 className="text-2xl dark:text-white">Add Overlays</h3>
             <div className="mb-2 block">
                 <Label htmlFor="name" value="Name:" />
@@ -57,8 +57,13 @@ export const OverlayAdder = ({ addOverlays }: { addOverlays: any }) => {
                 onChange={(e) => setUrl(e.target.value)}
             />
 
-            <Button type="submit" onClick={submit} id="create-overlay-submit">
-                +
+            <Button
+                type="submit"
+                className="pt-2 mt-2"
+                onClick={submit}
+                id="create-overlay-submit"
+            >
+                Create
             </Button>
         </div>
     )
