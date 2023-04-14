@@ -65,11 +65,11 @@ export const createOverlayWindow = (config: OverlayConfig): void => {
             BrowserWindow.getAllWindows().forEach(function (win) {
                 //TODO: Stay window culling, have it look for any windows that it doesent know what they are and just close them
 
-                console.log(
+                /*  console.log(
                     'Found existing',
                     win.webContents.getProcessId(),
                     window.browser.processId
-                )
+                )*/
                 if (
                     win.webContents.getProcessId() == window.browser.processId
                 ) {
@@ -190,7 +190,8 @@ ipcMain.on('get-window-details', async (event, guid) => {
         const winGuid = await findGuid(win)
 
         if (winGuid === guid) {
-            event.sender.send('window-details', getWinDetails(win, guid))
+            // event.sender.send('window-details', await getWinDetails(win, guid))
+            event.returnValue = await getWinDetails(win, guid)
         }
         // Close without a guid that can be used
     }

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { OverlayConfig } from '../models/OverlayConfig'
 import { Button, Card, Dropdown, ToggleSwitch } from 'flowbite-react'
+import { mergeBrowserDetailsWithOverlay } from '../utils/utils'
+import { BrowserDetail } from '../models/BrowserDetail'
 
 export const OverlayListItem = ({
     config,
@@ -12,6 +14,7 @@ export const OverlayListItem = ({
     console.log('Creating overlay from configuration')
 
     const [overlay, editOverlay] = useState(config)
+    const [initialRender, setInitialRender] = useState(true)
 
     const deleteOverlay = () => {
         console.log('Deleting overlay')
@@ -29,15 +32,32 @@ export const OverlayListItem = ({
 
     const getWinDetails = (event: Event, response: any) => {
         console.log('win-details-response', response)
+        // get details and update overlay info
     }
 
     useEffect(() => {
-        editOverlay(config)
+        if (!initialRender) {
+            editOverlay(config)
+        }
     }, [config])
 
     useEffect(() => {
-        updateOverlay(overlay)
-        api.editOverlay(overlay)
+        console.log('overlay values changed')
+        if (!initialRender) {
+            console.log('Get windows Details by Guid: ' + config.guid)
+            api.getWindowDetailsByGuid(overlay.guid).then((details) => {
+                console.log('got details for', details)
+                const mergedOverlay = mergeBrowserDetailsWithOverlay(
+                    details,
+                    overlay
+                )
+                console.log('Merging overlay with details.')
+                api.editOverlay(mergedOverlay)
+                updateOverlay(mergedOverlay)
+            })
+        }
+
+        setInitialRender(false)
     }, [overlay])
 
     const toggleEditOverlay = async () => {

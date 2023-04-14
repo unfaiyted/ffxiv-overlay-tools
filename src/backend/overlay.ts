@@ -5,7 +5,6 @@ import * as fs from 'fs'
 
 import { appConfig, windowDetails } from './index'
 import { encodeCoords } from '../utils/utils'
-import { BrowserDetail } from '../models/BrowserDetail'
 
 ipcMain.handle('show-overlay', (event, config: OverlayConfig) => {
     console.log('show-overlay', config)
@@ -82,24 +81,3 @@ ipcMain.handle('delete-overlay', (event, guid: string) => {
     fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig))
     return appConfig
 })
-
-const mergeBrowserDetailsWithOverlay = (
-    details: BrowserDetail[],
-    overlay: OverlayConfig
-) => {
-    details.forEach((detail) => {
-        console.log('save-overlay-details', detail)
-        if (detail.guid === overlay.guid) {
-            console.log('Matching Details for overlay positions')
-            overlay.position = encodeCoords([
-                detail.contentBounds.x,
-                detail.contentBounds.y,
-            ])
-            overlay.size = encodeCoords([
-                detail.bounds.width,
-                detail.bounds.height,
-            ])
-        }
-    })
-    return overlay
-}
