@@ -1,88 +1,105 @@
-import {ipcMain} from "electron";
-import {OverlayConfig} from "../models/OverlayConfig";
-import {createOverlayWindow} from "./windows";
-import * as fs from "fs";
+import { ipcMain } from 'electron'
+import { OverlayConfig } from '../models/OverlayConfig'
+import { createOverlayWindow } from './windows'
+import * as fs from 'fs'
 
-import {appConfig, windowDetails} from "../index";
-import {BrowserDetail} from "../models/BrowserDetail";
-import {encodeCoords} from "../utils/utils";
+import { appConfig, windowDetails } from './index'
+import { encodeCoords } from '../utils/utils'
+import { BrowserDetail } from '../models/BrowserDetail'
 
-
-ipcMain.handle('show-overlay',(event, config: OverlayConfig) => {
-    console.log('show-overlay', config);
-    createOverlayWindow(config);
+ipcMain.handle('show-overlay', (event, config: OverlayConfig) => {
+    console.log('show-overlay', config)
+    createOverlayWindow(config)
 })
 
-ipcMain.handle('create-overlay',(event, config: OverlayConfig) => {
-    console.log('create-overlay', config);
+ipcMain.handle('create-overlay', (event, config: OverlayConfig) => {
+    console.log('create-overlay', config)
 
-    createOverlayWindow(config);
+    createOverlayWindow(config)
 
-    appConfig.overlays = [...appConfig.overlays, config];
+    appConfig.overlays = [...appConfig.overlays, config]
 
     //save config
-    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig));
+    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig))
 
-    return appConfig;
-
+    return appConfig
 })
-ipcMain.handle('edit-overlay',(event, config: OverlayConfig) => {
+ipcMain.handle('edit-overlay', (event, config: OverlayConfig) => {
+    console.log('edit-overlay', config)
 
-    console.log('edit-overlay', config);
+    createOverlayWindow(config)
 
-    createOverlayWindow(config);
+    const matchingItem = appConfig.overlays.findIndex(
+        (overlay) => overlay.guid === config.guid
+    )
 
-    const matchingItem = appConfig.overlays.findIndex(overlay => overlay.guid === config.guid);
+    appConfig.overlays[matchingItem] = config
+    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig))
 
-    appConfig.overlays[matchingItem] =  config;
-    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig));
+    return appConfig
+})
+ipcMain.on('save-overlay-positions', (event) => {
+    const details = windowDetails
 
-    return appConfig;
-
-});
-
-ipcMain.on('save-overlay-positions',(event) => {
-
-    const details = windowDetails;
-
-    console.log('save-overlay-positions', details);
+    console.log('save-overlay-positions', details)
 
     const updatedOverlays = appConfig.overlays.map((item) => {
-            details.forEach(detail => {
-                //TODO: url is not great, need to rethink my id
+        details.forEach((detail) => {
+            console.log('save-overlay-details', detail)
 
-                console.log("save-overlay-details",detail)
+            if (detail.guid === item.guid) {
+                console.log('Matching Details for overlay positions')
+                item.position = encodeCoords([
+                    detail.contentBounds.x,
+                    detail.contentBounds.y,
+                ])
+                item.size = encodeCoords([
+                    detail.bounds.width,
+                    detail.bounds.height,
+                ])
+            }
+        })
+        return item
+    })
 
-                if(detail.guid === item.guid) {
-                    console.log("Matching Details for overlay positions");
-                    item.position = encodeCoords([detail.contentBounds.x, detail.contentBounds.y])
-                    item.size =  encodeCoords([detail.bounds.width,detail.bounds.height])
-                }
-            })
-       return item;
-    });
+    appConfig.overlays = updatedOverlays
 
-    appConfig.overlays = updatedOverlays;
+    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig))
 
-    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig));
+    return appConfig
+})
+ipcMain.handle('delete-overlay', (event, guid: string) => {
+    const matchingItem = appConfig.overlays.findIndex(
+        (overlay) => overlay.guid === guid
+    )
 
-    return appConfig;
-
-});
-ipcMain.handle('delete-overlay',(event, guid: string) => {
-
-    const matchingItem = appConfig.overlays.findIndex(overlay => overlay.guid === guid);
-
-    console.log('delete-overlay',matchingItem);
+    console.log('delete-overlay', matchingItem)
 
     // close overlay window
 
-    appConfig.overlays.splice(matchingItem, 1);
+    appConfig.overlays.splice(matchingItem, 1)
 
-    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig));
-    return appConfig;
-
-
+    fs.writeFileSync('./overlays.config.json', JSON.stringify(appConfig))
+    return appConfig
 })
 
-ipcMain.handle('',()=>{});
+const mergeBrowserDetailsWithOverlay = (
+    details: BrowserDetail[],
+    overlay: OverlayConfig
+) => {
+    details.forEach((detail) => {
+        console.log('save-overlay-details', detail)
+        if (detail.guid === overlay.guid) {
+            console.log('Matching Details for overlay positions')
+            overlay.position = encodeCoords([
+                detail.contentBounds.x,
+                detail.contentBounds.y,
+            ])
+            overlay.size = encodeCoords([
+                detail.bounds.width,
+                detail.bounds.height,
+            ])
+        }
+    })
+    return overlay
+}
